@@ -7,8 +7,10 @@ require("./dbConfig")
 const masterAdminRoutes=require("./routes/masterAdminRoutes")
 
 const app = express()
+
 app.use(cors({
-    origin: ["*"]
+    origin:"http://localhost:5173",
+    credentials:true
 }))
 app.use(cookieParse())
 app.use(express.json())
