@@ -2,6 +2,7 @@ const masterAdminModel = require("../models/masterAdminModel")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const { sendMail } = require("../utils/sendMail")
+const { resetPasswordTemplate } = require("../template/ResetPassword")
 
 const login = async (req, res) => {
     try {
@@ -31,17 +32,17 @@ const login = async (req, res) => {
 
 const forgetPassword = async (req, res) => {
     try {
-    
+
         let { email } = req.body
         let isMasterAdminExist = await masterAdminModel.findOne({ email })
         if (!isMasterAdminExist) {
             return res.status(404).json({ isSuccess: false, message: "Master Admin Not Found" })
         }
-   
+
         let token = jwt.sign({ _id: isMasterAdminExist?._id }, process.env.secret_key, { expiresIn: "5m" })
         let frontEndUrl = `${process.env.front_end_url}/resetPassword?token=${token}`
-    
-        await sendMail("jaygurjar3045@gmail.com", "jaygurjar3045@gmail.com", "reset Password", `<a href=${frontEndUrl}>click</a>`)
+
+        await sendMail("jaygurjar3045@gmail.com", "jaygurjar3045@gmail.com", "Reset Your Password", resetPasswordTemplate(frontEndUrl))
         return res.status(200).json({ isSuccess: true, message: "Reset Password Link Sended" })
     } catch (error) {
         return res.status(500).json({ isSuccess: false, message: "Internal Server Error", error })
@@ -51,7 +52,8 @@ const forgetPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
     try {
         let { password, confirmPassword } = req.body
-        let { token } = req.query.token
+ 
+        let { token } = req.query
         if (!token) {
             return res.status(404).json({ isSuccess: false, message: "Token Not Found" })
         }
