@@ -5,6 +5,9 @@ require("dotenv").config()
 require("./dbConfig")
 
 const masterAdminRoutes=require("./routes/masterAdminRoutes")
+const studentRoutes=require("./routes/StudentRoutes")
+const quizRouters = require("./routes/quizRoutes")
+
 
 const app = express()
 
@@ -15,6 +18,9 @@ app.use(cors({
 app.use(cookieParse())
 app.use(express.json())
 app.use("/masterAdmin",masterAdminRoutes)
+app.use("/student",studentRoutes)
+app.use("/quiz",quizRouters)
+
 
 
 
