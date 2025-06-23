@@ -3,28 +3,28 @@ const mongoose = require("mongoose")
 
 const studentModel = mongoose.Schema({
 
-    studentName:{
+    name: {
         type: String
     },
-    Email:{
+    email: {
         type: String
     },
-    phoneNumber:{
+
+    number: {
         type: Number
     },
-    course:{
+    course: {
         type: String
     },
-    address:{
+    address: {
         type: String
     },
-    password:{
-        type:String
+    password: {
+        type: String
     }
 
 
 })
 
-module.exports=mongoose.model("student",studentModel)
+module.exports = mongoose.model("student", studentModel)
 
- 

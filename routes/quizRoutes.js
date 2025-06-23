@@ -1,14 +1,39 @@
-const exxpress = require('express');
+const express = require('express');
+const { 
+  addQuiz, 
+  updateQuiz, 
+  deleteQuiz, 
+  deleteAllQuizzes, 
+  deleteQuizzesByFileName, 
+  getAllQuizzes, 
+  getQuizzesByFileName, 
+  uploadExcel 
+} = require('../controllers/quizController');
 
-const { addQuiz, updateQuiz, deleteQuiz, getQuiz } = require('../controllers/quizController');
-const Router = exxpress.Router();
+const router = express.Router();
 
-Router.post("/add", addQuiz);
-Router.put("/update", updateQuiz);  
-Router.delete("/delete", deleteQuiz);
-Router.get("/all", getQuiz);
+// Add a new quiz
+router.post('/', addQuiz);
 
+// Update a quiz by ID
+router.put('/', updateQuiz);
 
+// Delete a quiz by ID
+router.delete('/', deleteQuiz);
 
+// Delete all quizzes
+router.delete('/all', deleteAllQuizzes);
 
-module.exports = Router;
+// Delete quizzes by fileName
+router.delete('/file', deleteQuizzesByFileName);
+
+// Get all quizzes (grouped by fileName and Course)
+router.get('/', getAllQuizzes);
+
+// Get quizzes by fileName
+router.get('/file', getQuizzesByFileName);
+
+// Upload quizzes via Excel
+router.post('/upload', uploadExcel);
+
+module.exports = router;

@@ -21,6 +21,7 @@ const login = async (req, res) => {
             httpOnly: true,
             secure: true
         })
+        
         return res.status(200).json({ isSuccess: true, message: "User Login Successfully" })
 
 
@@ -52,7 +53,7 @@ const forgetPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
     try {
         let { password, confirmPassword } = req.body
- 
+
         let { token } = req.query
         if (!token) {
             return res.status(404).json({ isSuccess: false, message: "Token Not Found" })
@@ -84,7 +85,8 @@ const resetPassword = async (req, res) => {
 const adminProfile = async (req, res) => {
     try {
         let _id = req?.authToken
-        let isUserExist = await masterAdminModel.findOne({ _id })
+        
+        let isUserExist = await masterAdminModel.findOne({ _id }).select('-password'); 
         if (!isUserExist) {
             return res.status(400).json({ isSuccess: false, message: "Master Admin Not Found" })
         }
@@ -98,6 +100,15 @@ const adminProfile = async (req, res) => {
     }
 }
 
+const logoutUser = async (req, res) => {
+    try {
+        res.clearCookie("authToken")
+        return res.status(200).json({ isSuccess: true, message: "User Logoout Succesfully" })
+    } catch (error) {
+        return res.json({ isSuccess: false, message: "Internal Server Error", error })
+    }
+}
+
 
 
 
@@ -105,7 +116,7 @@ const adminProfile = async (req, res) => {
 module.exports = {
     login,
     forgetPassword,
-
+logoutUser,
     resetPassword,
     adminProfile
 }

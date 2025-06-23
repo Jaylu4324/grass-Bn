@@ -1,34 +1,45 @@
 const studentModel = require("../models/studentModel")
+const bcrypt = require("bcrypt")
+
 
 const addStudent = async (req, res) => {
     try {
         let {
-            studentName,
-            Email,
-            phoneNumber,
+            name,
+            email,
+            number
+            ,
             course,
             address,
-            password
+            
         } = req.body
-
-        const existingStudent  = await studentModel.findOne({ Email })
-        if (existingStudent ) {
+        
+        const existingStudent = await studentModel.findOne({ email })
+        if (existingStudent) {
             return res.status(401).json({ isSuccess: false, message: "Email already exist " })
-
+            
         }
+        
+        const bcryptPasword = bcrypt.hashSync(process.env.studentPassword,10)
+        
         const studentData = new studentModel({
-            studentName,
-            Email,
-            phoneNumber,
+            name,
+            email,
+            number,
             course,
             address,
-            password
+            password: bcryptPasword
         })
 
 
 
-        const data = await studentData.save()
-        return res.status(201).json({ isSuccess: true, message: "Student add successfully", data })
+        const isSaved = await studentData.save()
+        if (isSaved) {
+
+            return res.status(201).json({ isSuccess: true, message: "Student add successfully" })
+        } else {
+            return res.status(400).json({ isSuccess: false, message: "Error While Inserting Student" })
+        }
 
     } catch (error) {
         return res.status(500).json({ isSuccess: false, message: "Internal Server Error", error })
@@ -40,14 +51,7 @@ const updateStudent = async (req, res) => {
 
 
     try {
-        let {
-            studentName,
-            Email,
-            phoneNumber,
-            course,
-            address,
-            password
-        } = req.body
+
 
         const updatedData = await studentModel.updateOne({ _id: req.query.id }, req.body)
 
