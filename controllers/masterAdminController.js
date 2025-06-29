@@ -1,6 +1,6 @@
 const masterAdminModel = require("../models/masterAdminModel")
 const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken") 
 const { sendMail } = require("../utils/sendMail")
 const { resetPasswordTemplate } = require("../template/ResetPassword")
 
@@ -62,6 +62,7 @@ const resetPassword = async (req, res) => {
         if (!isValidToken) {
             return res.status(401).json({ isSuccess: false, message: "Invalid  Token" })
         }
+        
         let isMasterAdminExist = await masterAdminModel.findOne({ _id: isValidToken._id })
         if (!isMasterAdminExist) {
             return res.status(401).json({ isSuccess: false, message: "Master Admin Not Found" })

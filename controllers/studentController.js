@@ -1,7 +1,6 @@
 const studentModel = require("../models/studentModel")
 const bcrypt = require("bcrypt")
 
-
 const addStudent = async (req, res) => {
     try {
         let {
